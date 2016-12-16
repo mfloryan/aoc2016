@@ -38,5 +38,6 @@ function calculateChecksum(data) {
 
 console.log(calculateChecksum(generateData("10000",20)));
 console.log(calculateChecksum(generateData("01111001100111011",272)));
+console.log(calculateChecksum(generateData("01111001100111011",35651584)));
 
 // console.log(calculateChecksum('110010110100'));
