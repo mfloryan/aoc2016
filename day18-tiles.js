@@ -13,7 +13,6 @@ function getNextRow(currentRow) {
         if (trapRules.includes(decisionTiles)) {
             nextRow += trap;
         } else nextRow += safe;
-
     }
 
     return nextRow;
@@ -21,14 +20,11 @@ function getNextRow(currentRow) {
 
 let firstRow = ".^^^^^.^^.^^^.^...^..^^.^.^..^^^^^^^^^^..^...^^.^..^^^^..^^^^...^.^.^^^^^^^^....^..^^^^^^.^^^.^^^.^^";
 
-let rows =[];
+let total = 0;
 let currentRow = firstRow;
-for (let i =0; i < 40; i++) {
-    rows.push(currentRow);
+for (let i =0; i < 400000; i++) {
+    total += currentRow.split('').filter(t => t == safe).length;
     currentRow = getNextRow(currentRow);
 }
 
-console.log(rows);
-
-console.log(
-    rows.map(row => row.split('').filter(t => t == safe)).map(i => i.length).reduce((p,c)=> p+c ,0));
+console.log(total);
