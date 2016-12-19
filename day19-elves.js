@@ -1,6 +1,6 @@
 "use strict";
 
-let elves = 5;
+let elves = 3005290;
 let elvesWithPresents = Array(elves).fill(1).map((p,i) => {return {e:i+1, p:p};});
 
 function movePresentsOnce(circle) {
