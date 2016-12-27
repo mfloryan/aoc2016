@@ -34,6 +34,10 @@ class Computer {
         this.pc++;
     }
 
+    noop() {
+        this.pc++;
+    }
+
     jnz(valueOrRegister, jump) {
         let value = Number.parseInt(valueOrRegister);
         if (Number.isNaN(value)) {
@@ -45,6 +49,36 @@ class Computer {
         } else {
             this.pc++;
         }
+    }
+
+    tgl(valueOrRegister) {
+        let distance = Number.parseInt(valueOrRegister);
+        if (Number.isNaN(distance)) {
+            distance = this.registers[valueOrRegister];
+        }
+        if (distance == 0) {
+            this.code[this.pc] = {f: this.inc, a: [valueOrRegister]};
+        } else {
+            let toggledInstruction = this.code[this.pc + Number.parseInt(distance)];
+
+            if (toggledInstruction) {
+                if (toggledInstruction.a.length == 1){
+                    if (toggledInstruction.f == this.inc) {
+                        toggledInstruction.f = this.dec;
+                    } else {
+                        toggledInstruction.f = this.inc;
+                    }
+                } else if (toggledInstruction.a.length == 2) {
+                    if (toggledInstruction.f == this.jnz) {
+                        toggledInstruction.f = this.cpy;
+                    } else {
+                        toggledInstruction.f = this.jnz;
+                    }
+                }
+            }
+        }
+
+        this.pc++;
     }
 
     constructor(assemblyCode) {
@@ -68,7 +102,6 @@ class Computer {
         while (this.pc < this.code.length) {
             let currentOperation = this.code[this.pc];
             currentOperation.f.apply(this, currentOperation.a);
-            console.log(this.pc);
         }
         return this.registers;
     }
@@ -77,5 +110,5 @@ class Computer {
 let computer = new Computer(assembunny);
 
 console.log(
-    computer.execute({a:7})
+    computer.execute({a:0})
 );
