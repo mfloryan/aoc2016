@@ -11,6 +11,32 @@ let assembunny = [
 ];
 
 let assembunny2 = [
+    'cpy a b',
+    'dec b',
+    'cpy a d',
+    'cpy 0 a',
+    'cpy b c',
+    'inc a',
+    'dec c',
+    'jnz c -2',
+    'dec d',
+    'jnz d -5',
+    'dec b',
+    'cpy b c',
+    'cpy c d',
+    'dec d',
+    'inc c',
+    'jnz d -2',
+    'tgl c',
+    'cpy -16 c',
+    'jnz 1 c',
+    'cpy 84 c',
+    'jnz 80 d',
+    'inc a',
+    'inc d',
+    'jnz d -2',
+    'inc c',
+    'jnz c -5',
 ];
 
 class Computer {
@@ -18,9 +44,11 @@ class Computer {
     cpy(valueOrRegister, register) {
         let value = Number.parseInt(valueOrRegister);
         if (Number.isNaN(value)) {
-            value = this.registers[value];
+            value = this.registers[valueOrRegister];
         }
-        this.registers[register] = value;
+        if (this.registers[register] !== undefined) {
+            this.registers[register] = value;
+        }
         this.pc++;
     }
 
@@ -44,8 +72,13 @@ class Computer {
             value = this.registers[valueOrRegister];
         }
 
+        let offset = Number.parseInt(jump);
+        if (Number.isNaN(offset)) {
+            offset = this.registers[jump];
+        }
+
         if (value != 0) {
-            this.pc += Number.parseInt(jump);
+            this.pc += Number.parseInt(offset);
         } else {
             this.pc++;
         }
@@ -56,11 +89,11 @@ class Computer {
         if (Number.isNaN(distance)) {
             distance = this.registers[valueOrRegister];
         }
+
         if (distance == 0) {
             this.code[this.pc] = {f: this.inc, a: [valueOrRegister]};
         } else {
             let toggledInstruction = this.code[this.pc + Number.parseInt(distance)];
-
             if (toggledInstruction) {
                 if (toggledInstruction.a.length == 1){
                     if (toggledInstruction.f == this.inc) {
@@ -99,6 +132,7 @@ class Computer {
 
     execute(initialRegisters) {
         this.registers = Object.assign(this.registers, initialRegisters);
+        console.log(this.registers);
         while (this.pc < this.code.length) {
             let currentOperation = this.code[this.pc];
             currentOperation.f.apply(this, currentOperation.a);
@@ -107,8 +141,8 @@ class Computer {
     }
 }
 
-let computer = new Computer(assembunny);
+let computer = new Computer(assembunny2);
 
 console.log(
-    computer.execute({a:0})
+    computer.execute({a:7})
 );
